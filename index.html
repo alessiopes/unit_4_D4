@@ -8,7 +8,11 @@
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     />
     <link rel="stylesheet" href="style.css" />
-    <link rel="icon" type="image/png" href="https://www.iconarchive.com/download/i75808/martz90/circle/books.ico">
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://www.iconarchive.com/download/i75808/martz90/circle/books.ico"
+    />
 
     <title>Ecommerce di Libri</title>
   </head>
@@ -46,7 +50,7 @@
 
     <div class="container">
       <div class="row justify-content-center mt-4">
-        <h1 class="mb-4">Benvenuto nel nostro Shop Online!</h1>
+        <h1 class="mb-4 px-2">Benvenuto nel nostro Shop Online!</h1>
         <div class="col-12">
           <div class="input-group">
             <input
@@ -64,6 +68,37 @@
         </div>
       </div>
     </div>
+
+    <!-- Carrello -->
+    <div class="container mt-4">
+      <div class="row">
+        <div class="col">
+          <h3 class="pl-2">Carrello</h3>
+          <div class="card mt-3">
+            <div class="card-header">
+              <button
+                class="btn btn-link"
+                type="button"
+                data-toggle="collapse"
+                data-target="#cartCollapse"
+                aria-expanded="true"
+                aria-controls="cartCollapse"
+              >
+                Mostra/Chiudi Carrello
+              </button>
+              <button id="clear-cart-button" class="btn btn-danger ml-2" onclick="clearCart()">Svuota carrello</button>
+            </div>
+            <div id="cartCollapse" class="collapse show">
+              <div id="cart-container" class="card-body">
+                <!-- Gli elementi del carrello verranno inseriti qui -->
+                <div id="alert-container"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
 
     <div class="container mt-5">
       <div id="product-container" class="row"></div>

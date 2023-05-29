@@ -27,7 +27,7 @@ function displayBooks(books) {
     image.alt = book.title;
 
     const price = document.createElement("p");
-    price.classList.add("card-text");
+    price.classList.add("card-text", "product-price");
     price.textContent = "Prezzo: $" + book.price.toFixed(2);
 
     const category = document.createElement("p");
@@ -48,7 +48,7 @@ function displayBooks(books) {
     saveButton.textContent = "Salva";
 
     // Aggiunge l'evento click al pulsante "Salva"
-    saveButton.addEventListener("click", handleSaveButtonClick);
+    //saveButton.addEventListener("click", handleSaveButtonClick);
 
     cardBody.appendChild(title);
     cardBody.appendChild(image);
@@ -64,6 +64,8 @@ function displayBooks(books) {
     container.appendChild(col);
   });
 }
+
+////////////////////////////////////////////////////////////////////////////
 
 // Funzione per eseguire il fetch dei libri
 function fetchBooks() {
@@ -92,6 +94,8 @@ function fetchBooks() {
     });
 }
 
+////////////////////////////////////////////////////////////////////////////
+
 // Funzione per gestire l'evento keyup nella barra di ricerca
 function handleSearchKeyUp(event) {
   // Verifica se il tasto premuto è il tasto "Invio" (codice 13)
@@ -103,10 +107,14 @@ function handleSearchKeyUp(event) {
   }
 }
 
+////////////////////////////////////////////////////////////////////////////
+
 // Funzione per gestire il click del pulsante "Cerca"
 function handleSearchButtonClick() {
   fetchBooks();
 }
+
+////////////////////////////////////////////////////////////////////////////
 
 // Aggiunge l'evento keyup all'elemento della barra di ricerca nel DOM
 document
@@ -118,23 +126,130 @@ document
   .getElementById("search-button")
   .addEventListener("click", handleSearchButtonClick);
 
-// Funzione per gestire l'aggiunta del libro al carrello
-function handleAddToCartButtonClick(event) {
-  const card = event.target.closest(".card");
-  const titleElement = card.querySelector(".card-title");
-  const bookTitle = titleElement.textContent;
+////////////////////////////////////////////////////////////////////////////
 
-  // Si può utilizzare il titolo del libro o altre informazioni per aggiungere il prodotto al carrello
-  // Aggiungere qui la logica per aggiungere il prodotto al carrello
+// Funzione per aggiungere il prodotto al carrello
+function addToCart(product) {
+  // Recupera il contenitore del carrello dal DOM
+  const cartContainer = document.getElementById("cart-container");
 
-  console.log("Prodotto aggiunto al carrello:", bookTitle);
+  // Crea un elemento div per rappresentare il prodotto nel carrello
+  const productElement = document.createElement("div");
+  productElement.classList.add("cart-product");
+
+  // Crea i contenuti per il prodotto (titolo, prezzo, immagine, ecc.)
+  const titleElement = document.createElement("h5");
+  titleElement.textContent = product.title;
+
+  const priceElement = document.createElement("p");
+  priceElement.textContent = "Prezzo: $" + product.price.toFixed(2);
+
+  // Crea il bottone per rimuovere il prodotto dal carrello
+  const removeButton = document.createElement("button");
+  removeButton.classList.add("btn", "btn-sm", "btn-danger", "ml-2");
+  removeButton.innerHTML = "Rimuovi";
+  removeButton.addEventListener("click", function () {
+    // Rimuovi il prodotto dal carrello
+    productElement.remove();
+
+    // Chiamata alla funzione per contare gli elementi iniziali nel carrello
+    countCartItems();
+  });
+
+  // Crea una linea orizzontale
+  const hr = document.createElement("hr");
+
+  // Aggiungi i contenuti al prodotto
+  productElement.appendChild(titleElement);
+  productElement.appendChild(priceElement);
+  productElement.appendChild(removeButton);
+  productElement.appendChild(hr);
+
+  // Aggiungi il prodotto al carrello
+  cartContainer.appendChild(productElement);
 }
 
-// Funzione per gestire il salvataggio del libro tra i preferiti
-function handleSaveButtonClick(event) {
-  const card = event.target.closest(".card");
-  const titleElement = card.querySelector(".card-title");
-  const bookTitle = titleElement.textContent;
+////////////////////////////////////////////////////////////////////////////
 
-  console.log("Libro salvato:", bookTitle);
+// Funzione per gestire il click sul pulsante "Aggiungi al carrello"
+function handleAddToCartButtonClick(event) {
+  // Seleziona la card
+  const card = event.target.closest(".card");
+
+  // Seleziona il titolo
+  const bookTitle = card.querySelector(".card-title").textContent;
+
+  // Seleziona il prezzo
+  const priceElement = card.querySelector(".product-price");
+  console.log(priceElement);
+  const priceText = priceElement.textContent.replace("Prezzo: $", "");
+  const bookPrice = parseFloat(priceText);
+
+  const product = {
+    title: bookTitle,
+    price: bookPrice,
+    //? Aggiungere altre proprietà del prodotto se necessario
+  };
+
+  // Aggiungi il prodotto al carrello
+  addToCart(product);
+
+  // Chiamata alla funzione per contare gli elementi iniziali nel carrello
+  countCartItems();
+}
+
+////////////////////////////////////////////////////////////////////////////
+
+// Funzione per contare gli elementi nel carrello
+function countCartItems() {
+  // Conta gli elementi nel carrello
+  const count = document.querySelectorAll('.cart-product').length;
+
+  // Mostra un messaggio di alert con Bootstrap
+  const alertContainer = document.getElementById('alert-container');
+
+  if (count > 0) {
+    const alertMessage = document.createElement('div');
+    alertMessage.classList.add('alert', 'alert-success', 'mb-3');
+    alertMessage.textContent = `Il carrello contiene ${count} prodotti.`;
+
+    // Rimuovi eventuali messaggi di alert precedenti
+    while (alertContainer.firstChild) {
+      alertContainer.removeChild(alertContainer.firstChild);
+    }
+
+    // Aggiungi l'elemento di chiusura dell'alert
+    const closeBtn = document.createElement('button');
+    closeBtn.classList.add('close');
+    closeBtn.setAttribute('type', 'button');
+    closeBtn.setAttribute('data-dismiss', 'alert');
+    closeBtn.setAttribute('aria-label', 'Chiudi');
+
+    const closeIcon = document.createElement('span');
+    closeIcon.setAttribute('aria-hidden', 'true');
+    closeIcon.innerHTML = '&times;';
+
+    closeBtn.appendChild(closeIcon);
+    alertMessage.appendChild(closeBtn);
+
+    // Aggiungi il messaggio di alert al DOM
+    alertContainer.appendChild(alertMessage);
+  } else {
+    // Se non ci sono prodotti nel carrello, nascondi l'alert
+    alertContainer.innerHTML = '';
+  }
+}
+
+
+///////////////////////////////////////////////////////////////
+
+// Funzione per svuotare il carrello
+function clearCart() {
+  // Seleziona il contenitore del carrello dal DOM
+  const cartContainer = document.getElementById('cart-container');
+
+  cartContainer.innerHTML = '';
+
+  // Aggiorna il conteggio dei prodotti nel carrello
+  countCartItems();
 }
