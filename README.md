@@ -17,6 +17,10 @@ EXTRA:
 2. Conta gli elementi nel carrello e mostra il risultato nella sezione carrello.
 3. Crea pulsante per svuotare il carello.
 
+Sviluppare:
+1. Aggiungere un pulsante "Nascondi" in ogni card, che se cliccata nasconde la card.
+2. Aggiungi un pulsante "Scopri" in ogni card, che se cliccata porta l'utente ad una pagina dedicata con i suoi dettagli. TIP: Utilizzare gli URLSearchParams simile a /dettagli.html/?id=1940026091 dove 1940026091 e' l'ASIN
+
 ================================================================
 
 DEVELOPER NOTES:
